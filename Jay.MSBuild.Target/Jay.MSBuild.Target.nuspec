@@ -2,7 +2,7 @@
 <package>
   <metadata minClientVersion="2.8.5">
     <id>Jay.MSBuild</id>
-    <version>0.2.0</version>
+    <version>0.2.1</version>
     <authors>SushiHangover\RobertN</authors>
     <owners>SushiHangover\RobertN</owners>
     <projectUrl>https://github.com/PlayScriptRedux/Jay.MSBuild.Target</projectUrl>
@@ -18,6 +18,7 @@
     <releaseNotes>
     Jay.MSBuild.Target release notes:
 
+    0.2.1 Uodate : Enhance build target to allow `.jay` files outside of src dir via filtering the @None ItemGroup
     0.2.0 Uodate : Added OS-X Support (jay.darwin) 
     0.1.0 New    : Initial Test Release
     </releaseNotes>

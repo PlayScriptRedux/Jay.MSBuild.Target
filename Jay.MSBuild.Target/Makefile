@@ -14,7 +14,7 @@ task:
 
 clean:
 	xbuild /target:Clean /p:Configuration=${CONFIG} ${ARGS}
-	-rm Jay.MSBuild.Target.*.nupkg
+	-rm Jay.MSBuild.*.nupkg
 
 publish: clean all
 	nuget push Jay.MSBuild.*.nupkg $(MyGetApiKey) -source https://www.myget.org/F/playscript/api/v2
