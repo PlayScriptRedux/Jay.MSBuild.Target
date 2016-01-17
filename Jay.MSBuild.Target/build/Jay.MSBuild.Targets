@@ -32,14 +32,23 @@
 
 	<!-- Get all jay files in the current project -->
 	<ItemGroup>
-		<JayFiles Include="**\*.jay"/>
+		<JayFiles Include="%(AllFiles.Identity)" Condition="$([System.Text.RegularExpressions.Regex]::IsMatch(%(Filename), '\.jay\'))"/>
 	</ItemGroup>
 
-	<Target Name="JayGenerate"
-		Inputs="@(JayFiles)"
-		Outputs="@(JayFiles->'$(IntermediateOutputPath)%(FileName).cs')"
-		Condition="'$(BuildingProject)'!='false'"
-		>
+	<!-- Get all jay files in the current project -->
+	<Target Name="JayFiles">
+		<ItemGroup>
+			<JayFiles Include="@(None)" Condition="'%(Extension)' == '.jay' " />
+		</ItemGroup>
+		<Message Text="                JayFiles: %(JayFiles.Identity) "/>
+	</Target>
+
+    <Target Name="JayGenerate"
+            Inputs="@(JayFiles)"
+            Outputs="@(JayFiles->'$(IntermediateOutputPath)%(FileName).cs')"
+            Condition="'$(BuildingProject)'!='false'"
+            DependsOnTargets="JayFiles"
+            >
 		<MakeDir Directories="$(IntermediateOutputPath)"/>
 		<!--Nuget does not preserve file attribs and OS-X/Linux do not have Nuget install scripts, so hack it. :-( -->
 		<Exec Condition=" '$(OS)' == 'UNIX' " Command="chmod a+x $(JayFullPath)" />
@@ -60,5 +69,6 @@
 		<Message Text="     MSBuildThisFileName: $(MSBuildThisFileName) "/>
 		<Message Text="         BuildingProject: $(BuildingProject) "/>
 		<Message Text="  IntermediateOutputPath: $(IntermediateOutputPath) "/>
+		<Message Text="  AllFiles: %(AllFiles.Identity) "/>
 	</Target>
 </Project>

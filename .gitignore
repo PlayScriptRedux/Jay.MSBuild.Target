@@ -1,3 +1,7 @@
+*/*.nupkg
 packages
 .nuget
 **.userprefs
+bin
+obj
+
