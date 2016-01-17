@@ -1,0 +1,35 @@
+﻿<?xml version="1.0"?>
+<package>
+  <metadata minClientVersion="2.8.5">
+    <id>Jay.MSBuild</id>
+    <version>0.2.0</version>
+    <authors>SushiHangover\RobertN</authors>
+    <owners>SushiHangover\RobertN</owners>
+    <projectUrl>https://github.com/PlayScriptRedux/Jay.MSBuild.Target</projectUrl>
+    <iconUrl>https://raw.githubusercontent.com/PlayScriptRedux/Jay.MSBuild.Target/master/Jay.MSBuild.Target/img/Jay.MSBuild.Target.png</iconUrl>
+    <licenseUrl>https://github.com/PlayScriptRedux/Jay.MSBuild.Target/blob/master/Jay.MSBuild.Target/LICENSE.md</licenseUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <summary>
+    Adds Jay (yacc) file MSBuild targets to your project. Works both on a developer workstation and on a CI build server.
+    </summary>
+    <description>
+    Adds Jay (yacc) file MSBuild targets to your project. Works both on a developer workstation and on a CI build server.
+    </description>
+    <releaseNotes>
+    Jay.MSBuild.Target release notes:
+
+    0.2.0 Uodate : Added OS-X Support (jay.darwin) 
+    0.1.0 New    : Initial Test Release
+    </releaseNotes>
+        <language>en-US</language>
+    <copyright>Copyright (c) SushiHangover\RobertN (sushihangover@outlook.com)</copyright>
+    <developmentDependency>true</developmentDependency>
+  </metadata>
+  <files>
+    <file src="LICENSE.md" target="LICENSE.md" />
+    <file src="build/Jay.MSBuild.Targets" target="build" />
+    <file src="bin/Release/Jay.MSBuild.Tasks.dll" target="build" />
+    <file src="tools/**" target="tools" />
+    <file src="docs/**" target="tools" />
+  </files>
+</package>

@@ -1,0 +1,64 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+<!--
+	========================================
+	Generate parser code from Yacc/Jay files
+	========================================
+	Jay.MSBuild.Targets
+
+	Authors: SushiHangover\RobertN
+
+	Copyright 2015 All Rights Reserved.
+-->
+
+	<PropertyGroup>
+		<CoreCompileDependsOn>$(CoreCompileDependsOn);JayGenerate</CoreCompileDependsOn>
+	</PropertyGroup>
+
+	<!-- Determine which jay binary to execute -->
+	<PropertyGroup Condition=" '$(OS)' == 'UNIX' ">
+		<JayBin>jay.darwin</JayBin>
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(OS)' == 'Windows_NT' ">
+		<JayBin>jay.exe</JayBin>
+	</PropertyGroup>
+
+	<!-- Build location of jay executable -->
+	<PropertyGroup>
+		<JayLocation>$(MSBuildThisFileDirectory)..\tools</JayLocation>
+		<JayFullPath>$(JayLocation)\$(JayBin)</JayFullPath>
+	</PropertyGroup>
+
+
+	<!-- Get all jay files in the current project -->
+	<ItemGroup>
+		<JayFiles Include="**\*.jay"/>
+	</ItemGroup>
+
+	<Target Name="JayGenerate"
+		Inputs="@(JayFiles)"
+		Outputs="@(JayFiles->'$(IntermediateOutputPath)%(FileName).cs')"
+		Condition="'$(BuildingProject)'!='false'"
+		>
+		<MakeDir Directories="$(IntermediateOutputPath)"/>
+		<!--Nuget does not preserve file attribs and OS-X/Linux do not have Nuget install scripts, so hack it. :-( -->
+		<Exec Condition=" '$(OS)' == 'UNIX' " Command="chmod a+x $(JayFullPath)" />
+		<!--Run the jay command line tool that generates the cs files.-->
+		<Exec Command="$(JayFullPath) -ct &lt; $(JayLocation)\skeleton.cs @(JayFiles->'&quot;%(Identity)&quot;') &gt; $(IntermediateOutputPath)%(FileName).cs" />
+		<!--Add the generated files to the list of the files to compile.-->
+		<CreateItem Include="@(JayFiles->'$(IntermediateOutputPath)%(FileName).cs')">
+			<Output TaskParameter="Include" ItemName="Compile" />
+			<Output TaskParameter="Include" ItemName="FileWrites"/>
+		</CreateItem>
+	</Target>
+
+		<Target Name="JayDebug">
+		<Message Text="                      OS: $(OS) "/>
+		<Message Text="             JayLocation: $(JayLocation) "/>
+		<Message Text="                JayFiles: @(JayFiles) "/>
+		<Message Text="MSBuildThisFileDirectory: $(MSBuildThisFileDirectory) "/>
+		<Message Text="     MSBuildThisFileName: $(MSBuildThisFileName) "/>
+		<Message Text="         BuildingProject: $(BuildingProject) "/>
+		<Message Text="  IntermediateOutputPath: $(IntermediateOutputPath) "/>
+	</Target>
+</Project>

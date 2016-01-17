@@ -1,0 +1,92 @@
+%{
+//
+
+using System.Text;
+using System.IO;
+using System;
+using System.Collections.Generic;
+//using Mono.CSharp;
+//using Linq = Mono.CSharp.Linq;
+//using Enum = Mono.CSharp.Enum;
+//using Attribute = Mono.CSharp.Attribute;
+//using Delegate = Mono.CSharp.Delegate;
+//using Nullable = Mono.CSharp.Nullable;
+//#if FRAMEWORK
+//using PsSys = System;
+//#else
+//using PsSys = Mono.CSharp;
+//#endif
+
+namespace Mono.PlayScript
+{
+        /// <summary>
+        ///    The PlayScript Parser
+        /// </summary>
+        public class PlayScriptParser
+        {
+	        int yacc_verbose_flag;
+%}
+
+%token EOF
+%token NONE   /* This token is never returned by our lexer */
+%token ERROR		// This is used not by the parser, but by the tokenizer.
+			// do not remove.
+
+/* Add precedence rules to solve dangling else s/r conflict */
+%nonassoc IF
+%nonassoc ELSE
+
+/* Define the operator tokens and their precedences */
+%right ASSIGN
+%right OP_COALESCING
+%right INTERR
+%left OP_OR
+%left OP_AND
+%left BITWISE_OR
+%left BITWISE_AND
+%left OP_SHIFT_LEFT OP_SHIFT_RIGHT
+%left PLUS MINUS
+%left STAR DIV PERCENT
+%right BANG CARRET UMINUS
+%nonassoc OP_INC OP_DEC
+%left OPEN_PARENS
+%left NEW
+%left OPEN_BRACKET OPEN_BRACE
+%left DOT
+
+%start compilation_unit
+%%
+
+compilation_unit
+	: outer_declaration opt_EOF
+	  {
+		Lexer.check_incorrect_doc_comment ();
+	  }
+	| interactive_parsing  { Lexer.CompleteOnEOF = false; } opt_EOF
+	| documentation_parsing
+	;
+	
+
+opt_EOF
+	: /* empty */
+	| EOF
+	;
+
+extern_alias_directives
+	: extern_alias_directive
+	| extern_alias_directives extern_alias_directive
+	;
+
+%%
+
+
+String lexer;
+
+public Tokenizer Lexer {
+        get {
+                return lexer;
+        }
+}
+
+/* end end end */
+}
